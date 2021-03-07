@@ -10,6 +10,10 @@ import pandas as pd
 import numpy as np
 import sklearn
 import datetime
+import pickle
+import hashlib
+import binascii
+import config
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -17,19 +21,29 @@ logger.setLevel(logging.INFO)
 class MeterDatabase:
     def __init__(self, file):
         self.file = file
-        logger.info("Loading smart meter dataset... " + datetime.datetime.now().strftime("%H:%M:%S"))
+        pickle_file = config.smart_meter_data_pickle_path
 
-        # Read smart meter dataset
-        TextFileReader = pd.read_csv(self.file,chunksize=1000000, low_memory= False)
-        dfList = []
-        for df in TextFileReader:
-            dfList.append(df)
-
-        self.df = pd.concat(dfList,sort=False)
+        # Try to load a cached pickle version 
+        try: 
+            self.df = pd.read_pickle(pickle_file)
+            logger.debug("ℹ️ Found a pickled version of smart meter database so loading that instead")
         
-        logger.info("✔️ smart meter dataset loaded " + datetime.datetime.now().strftime("%H:%M:%S"))
+        except(FileNotFoundError, AttributeError):
+            # Read smart meter dataset by chunks due to large file size
+            TextFileReader = pd.read_csv(self.file,chunksize=1000000, low_memory= False)
+            dfList = []
+            for df in TextFileReader:
+                dfList.append(df)
+            self.df = pd.concat(dfList,sort=False)
+            logger.debug("ℹ️ Saving dataset to pickle file for faster loading")
+        
+            logger.info("✔️ smart meter dataset loaded " + datetime.datetime.now().strftime("%H:%M:%S"))
+            
+            self.reformat_dataframe()
+            
+            # Save dataset csv as pickle for faster loading in the future
+            self.df.to_pickle(pickle_file)
 
-        self.reformat_dataframe()
     
     def reformat_dataframe(self):
         logger.info("Reformatting smart meter dataset... "+ datetime.datetime.now().strftime("%H:%M:%S"))
