@@ -1,7 +1,8 @@
 import logging
 import sys
 
-import databases, preprocessing, config
+from data import databases, preprocessing
+import config
 
 # Set up a logging interface to catch warnings
 logger = logging.getLogger(__name__)
