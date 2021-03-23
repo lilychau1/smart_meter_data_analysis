@@ -1,5 +1,6 @@
 """
 - Create time feature
+- Create temperature feature from UK temperature dataset
 """
 
 def create_time_features(meter_df):
@@ -16,3 +17,6 @@ def create_time_features(meter_df):
     meter_df["Hour"] = meter_df["DateTime"].dt.hour
 
     return meter_df
+
+def create_temp_features(meter_df, temp_df):
+    pass

@@ -15,11 +15,10 @@ import hashlib
 import binascii
 import config
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = logging.getLogger("smam")
 
 class MeterDatabase:
-    def __init__(self, file):
+    def __init__(self, file, sample_size_reduction, reduce_to_proportion):
         self.file = file
         pickle_file = config.smart_meter_data_pickle_path
 
@@ -35,12 +34,16 @@ class MeterDatabase:
             for df in TextFileReader:
                 dfList.append(df)
             self.df = pd.concat(dfList,sort=False)
-            logger.debug("ℹ️ Saving dataset to pickle file for faster loading")
         
             logger.info("✔️ smart meter dataset loaded " + datetime.datetime.now().strftime("%H:%M:%S"))
             
             self.reformat_dataframe()
+
+            if sample_size_reduction:
+                self.reduce_sample_size(reduce_to_proportion)
             
+            logger.debug("ℹ️ Saving dataset to pickle file for faster loading")
+
             # Save dataset csv as pickle for faster loading in the future
             self.df.to_pickle(pickle_file)
 
@@ -49,10 +52,10 @@ class MeterDatabase:
         logger.info("Reformatting smart meter dataset... "+ datetime.datetime.now().strftime("%H:%M:%S"))
 
         # Rename columns
-        self.df = self.df.rename(columns = {"KWH/hh (per half hour) ": "Consumption", "Unnamed: 0": "id"})
+        self.df = self.df.rename(columns = {"KWH/hh (per half hour) ": "Consumption"})
 
         columns_to_extract = [
-            "id", "DateTime", "Consumption", "Acorn", "Acorn_grouped"
+            "LCLid", "DateTime", "Consumption", "Acorn", "Acorn_grouped"
         ]
 
         # Extract necessary columns
@@ -76,18 +79,45 @@ class MeterDatabase:
 
         logger.info("✔️ smart meter dataframe reformatted " + datetime.datetime.now().strftime("%H:%M:%S"))
 
+    def reduce_sample_size(self, reduce_to_proportion):
+
+        # Store all LCLids
+        LCLid_list = self.df.LCLid.unique().tolist()
+
+        # Specify a list of LCLids within the specified proportion to which the size should reduce
+        LCLid_to_keep = LCLid_list[:int(len(LCLid_list)*reduce_to_proportion)]
+
+        # Extract from df only entries with the LCLid within the keep list
+        self.df = self.df[self.df.LCLid.isin(LCLid_to_keep)]
+
+        logger.info("✔️ smart meter dataframe size reduced " + datetime.datetime.now().strftime("%H:%M:%S"))
+
     def get_dataframe(self):
         returned_df = self.df.copy()
         return returned_df
 
 class TemperatureDatabase:
     def __init__(self, file):
-            self.file = file
+        self.file = file
+        pickle_file = config.temperature_pickle_path
+
+        # Try to load a cached pickle version 
+        try: 
+            self.df = pd.read_pickle(pickle_file)
+            logger.debug("ℹ️ Found a pickled version of smart meter database so loading that instead")
+        
+        except(FileNotFoundError, AttributeError):         
             # Read temperature dataset
             self.df = pd.read_csv(self.file, skiprows = 2)
-            logger.info("✔️ temperature dataset loaded")
 
+            logger.debug("ℹ️ Saving dataset to pickle file for faster loading")
+                    
             self.reformat_dataframe()
+            
+            # Save dataset csv as pickle for faster loading in the future
+            self.df.to_pickle(pickle_file)
+
+            logger.info("✔️ temperature dataset loaded " + datetime.datetime.now().strftime("%H:%M:%S"))
 
     def reformat_dataframe(self):
             # Convert time variable into datetime type
