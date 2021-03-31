@@ -7,16 +7,13 @@ from features import features
 import config
 
 # Set up a logging interface to catch warnings
-logger = logging.getLogger("smam")
+logger = logging.getLogger(__name__)
 #set the lowest-severity log message a logger to be handle to be INFO
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 if __name__ == "__main__":
-    logger.info("Loading smart meter database... " + datetime.datetime.now().strftime("%H:%M:%S"))
     smart_meter_df = databases.MeterDatabase(config.smart_meter_data_path, sample_size_reduction = True, reduce_to_proportion = 0.33).get_dataframe()
-    # smart_meter_df = preprocessing.reduce_sample_size(smart_meter_df)
     temp_df = databases.TemperatureDatabase(config.temperature_data_path).get_dataframe()
-    smart_meter_df_preprocessed = preprocessing.reduce_resolution(smart_meter_df)
-    smart_meter_df_preprocessed = features.create_time_features(smart_meter_df_preprocessed)
-    smart_meter_temp_df = features.create_temp_features(smart_meter_df_preprocessed, temp_df)
+    smart_meter_df_preprocessed = features.create_time_features(smart_meter_df)
+    smart_meter_df_preprocessed = features.create_weather_features(smart_meter_df_preprocessed, temp_df)
