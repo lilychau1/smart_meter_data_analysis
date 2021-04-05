@@ -19,7 +19,9 @@ if __name__ == "__main__":
     weather_df = databases.WeatherDatabase(config.weather_data_path).get_dataframe()
     
     try: 
-        smart_meter_df_preprocessed = databases.PreprocessedDataset(config.preprossed_data_pickle_path)
+        # Try to load pickled pre-processed dataset, if any, for train-test split
+        smart_meter_df_preprocessed = databases.PreprocessedDataset(config.preprossed_data_pickle_path).get_dataframe()
+
     except(FileNotFoundError):
         # Add time features (e.g.: month, weekday, hour)
         smart_meter_df_preprocessed = features.create_time_features(smart_meter_df)
@@ -27,7 +29,9 @@ if __name__ == "__main__":
         # Add weather features (e.g.: temperature, precipitation, snowfall)
         smart_meter_df_preprocessed = features.create_weather_features(smart_meter_df_preprocessed, weather_df)
 
-    # Save preprocessed database as a pickle file for analysis convenience
-    preprocessing.save_preprocessed_dataset_pickle(smart_meter_df_preprocessed)
+        # Feature extraction
+
+        # Save preprocessed database as a pickle file for analysis convenience
+        preprocessing.save_preprocessed_dataset_pickle(smart_meter_df_preprocessed)
 
     breakpoint()

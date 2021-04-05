@@ -145,3 +145,7 @@ class PreprocessedDataset:
         
         except(FileNotFoundError, AttributeError):         
             raise FileNotFoundError
+    
+    def get_dataframe(self):
+        returned_df = self.df.copy()
+        return returned_df
