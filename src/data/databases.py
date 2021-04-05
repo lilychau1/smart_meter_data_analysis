@@ -132,3 +132,16 @@ class WeatherDatabase:
     def get_dataframe(self):
         returned_df = self.df.copy()
         return returned_df
+
+class PreprocessedDataset:
+    def __init__(self, file):
+        self.file = file
+        pickle_file = config.preprossed_data_pickle_path
+
+        # Try to load a cached pickle version 
+        try: 
+            self.df = pd.read_pickle(pickle_file)
+            logger.info("ℹ️ Found a pickled version of pre-processed smart meter database so loading that instead")
+        
+        except(FileNotFoundError, AttributeError):         
+            raise FileNotFoundError

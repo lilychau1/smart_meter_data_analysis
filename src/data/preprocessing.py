@@ -22,6 +22,6 @@ def reduce_resolution(meter_df):
 
     return meter_df
 
-def save_processed_dataset_pickle(processed_df):
+def save_preprocessed_dataset_pickle(preprocessed_df):
     pickle_file = config.preprossed_data_pickle_path
-    processed_df.to_pickle(pickle_file)
+    preprocessed_df.to_pickle(pickle_file)
