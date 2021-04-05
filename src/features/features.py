@@ -1,6 +1,6 @@
 """
 - Create time feature
-- Create temperature feature from UK temperature dataset
+- Create weather features from UK weather dataset
 """
 import logging
 import sys
@@ -29,10 +29,10 @@ def create_time_features(meter_df):
 
     return meter_df
 
-def create_weather_features(meter_df, temp_df):
+def create_weather_features(meter_df, weather_df):
 
     # Create weather features including temperature, precipitation, irradiance, snowfall, snow mass, cloud cover and air density
-    meter_df = meter_df.merge(temp_df, on = "DateTime")
+    meter_df = meter_df.merge(weather_df, on = "DateTime")
     
     logger.info("✔️ Weather features created " + datetime.datetime.now().strftime("%H:%M:%S"))
 

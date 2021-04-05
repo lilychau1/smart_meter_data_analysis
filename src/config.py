@@ -10,8 +10,8 @@ interim_database_folder = os.path.abspath(os.path.join(file_path, "../data/inter
 processed_dataset_folder = os.path.abspath(os.path.join(file_path, "../data/processed"))
 results_folder = os.path.abspath(os.path.join(file_path, "../results/"))
 
-# Configure paths for smart meter dataset and temperature dataset
+# Configure paths for smart meter dataset and weather dataset
 smart_meter_data_path = raw_database_folder + "/london_smart_meter_data_2013.csv"
-temperature_data_path = raw_database_folder + "/temperature_uk.csv"
+weather_data_path = raw_database_folder + "/weather_uk.csv"
 smart_meter_data_pickle_path = raw_database_folder + "./smdb_pickle.pkl"
-temperature_pickle_path = raw_database_folder + "./tempdb_pickle.pkl"
+weather_pickle_path = raw_database_folder + "./weatherdb_pickle.pkl"

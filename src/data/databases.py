@@ -101,10 +101,10 @@ class MeterDatabase:
         returned_df = self.df.copy()
         return returned_df
 
-class TemperatureDatabase:
+class WeatherDatabase:
     def __init__(self, file):
         self.file = file
-        pickle_file = config.temperature_pickle_path
+        pickle_file = config.weather_pickle_path
 
         # Try to load a cached pickle version 
         try: 
@@ -112,7 +112,7 @@ class TemperatureDatabase:
             logger.info("ℹ️ Found a pickled version of smart meter database so loading that instead")
         
         except(FileNotFoundError, AttributeError):         
-            # Read temperature dataset
+            # Read weather dataset
             self.df = pd.read_csv(self.file, skiprows = 2)
 
             logger.info("ℹ️ Saving dataset to pickle file for faster loading")
@@ -122,7 +122,7 @@ class TemperatureDatabase:
             # Save dataset csv as pickle for faster loading in the future
             self.df.to_pickle(pickle_file)
 
-            logger.info("✔️ temperature dataset loaded " + datetime.datetime.now().strftime("%H:%M:%S"))
+            logger.info("✔️ Weather dataset loaded " + datetime.datetime.now().strftime("%H:%M:%S"))
 
     def reformat_dataframe(self):
             # Convert time variable into datetime type
