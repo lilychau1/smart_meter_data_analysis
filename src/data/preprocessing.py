@@ -5,7 +5,7 @@ Pre-processes smart meter dataset.
 
 import pandas as pd
 import numpy as np
-import sklearn
+import config
 
 def reduce_resolution(meter_df):
 
@@ -21,3 +21,7 @@ def reduce_resolution(meter_df):
     meter_df = meter_df.reset_index()
 
     return meter_df
+
+def save_processed_dataset_pickle(processed_df):
+    pickle_file = config.preprossed_data_pickle_path
+    processed_df.to_pickle(pickle_file)
