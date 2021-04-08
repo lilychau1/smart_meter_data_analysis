@@ -5,7 +5,7 @@
 This project explores the correlation between electricity consumption and customer groups as well as different weather parameters, based on 2013 London smart meter database extracted from [London Datastore](https://data.london.gov.uk/dataset/smartmeter-energy-use-data-in-london-households) and UK weather data extracted from [Renewables Ninja](https://www.renewables.ninja/).
 
 ### Datasets
-* [2013 London smart meter database](https://data.london.gov.uk/download/smartmeter-energy-use-data-in-london-households/3527bf39-d93e-4071-8451-df2ade1ea4f2/Power-Networks-LCL-June2015(withAcornGps) (765.12 MB, unzipped 11.3GB)
+* [2013 London smart meter database](https://data.london.gov.uk/download/smartmeter-energy-use-data-in-london-households/3527bf39-d93e-4071-8451-df2ade1ea4f2/Power-Networks-LCL-June2015(withAcornGps).zip) (765.12 MB, unzipped 11.3GB)
 * [Renewables Ninja UK weather data](https://www.renewables.ninja/country_downloads/GB/ninja_weather_country_GB_merra-2_land_area_weighted.csv) (22.36 MB)
 
 **Description:**
