@@ -32,9 +32,9 @@ The Renewables Ninja weather dataset contains hourly weather data within Great B
 1. **air_density:** Air density at ground level in kg/m^3
 
 **Additional features created:**
-1. **Month:** Month of DateTime
-1. **Weekday:** Weekday of DateTime
-1. **Hour:** Hour of DateTime
+1. **Season:** Season of DateTime (Spring, Summer, Autumn, Winter)
+1. **Day_type:** Type of day of DateTime (Weekday, holiday or day before holiday)
+1. **Time_slot:** time slot of day of DateTime (Midnight, early morning, morning, early afternoon, late afternoon, early evening, late evening)
 
 ## Analysis
 1. **Loading data and save as pickle:** Loading both London smart meter database and Renewable Ninja weather data. For smart meter database, a feature is created to reduce sample size due to exceptionally large size. The model will first try to load any pickle saved in the data folder to save time. If no pickle file is found, it will load the raw data and save a pickle version for the future. 
@@ -43,7 +43,7 @@ The Renewables Ninja weather dataset contains hourly weather data within Great B
 
 1. **Data cleaning:** Removing unnecessary columns, such as "Acorn", renaming variables (e.g. "KWH/hh (per half hour)" to "Consumption"), resampling DateTime to become hourly data, converting variables to the correct data type (e.g. DateTime as DateTime type)
 
-1. **Feature creation:** Creating new and relevant features from DateTime: Month, hour and weekday, given basic understanding of factors affecting consumptions
+1. **Feature creation:** Creating new and relevant features from DateTime: Season, Time_slot and Day_type, given basic understanding of factors affecting consumptions
 
 1. **Data pre-processing:** Applying imputation on missing data, feature scaling on numerical data (Precipitation, snowfall, etc) and OneHot encoding on categorical data (e.g. Acorn_grouped, Month, weekday, hour, etc). This is currently done in Jupyter Notebook as a transformation pipeline.
 
