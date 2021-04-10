@@ -20,7 +20,7 @@ The Renewables Ninja weather dataset contains hourly weather data within Great B
 1. **KWH/hh (per half hour):** Energy consumption, in kWh (per half hour)
 1. **Acorn_grouped:** Grouped category of CACI Acorn group
 
-**Renewable Ninja UK weather dataset variables:*
+**Renewable Ninja UK weather dataset variables:**
 1. **time:**: Date and time in UTC at hourly level
 1. **temperature:** Temperature at 2 meters above ground in degrees Celsius
 1. **precipitation:** 
