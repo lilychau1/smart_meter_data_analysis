@@ -12,6 +12,12 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
+def create_features(meter_df):
+    meter_df = create_time_features(meter_df)
+    meter_df = create_weather_features(meter_df)
+
+    return meter_df
+
 def create_time_features(meter_df):
     # Create new feature "season"
     meter_df = create_season_feature(meter_df)
@@ -26,7 +32,7 @@ def create_time_features(meter_df):
 
     return meter_df
 
-def create_season_feature(df):
+def create_season_feature(meter_df):
     # Create a series date contining a numerical representation of the day of DateTime (e.g. the start date of spring, 21 of March = 321)
     date = df.DateTime.dt.month*100 + df.DateTime.dt.day
 
@@ -37,7 +43,7 @@ def create_season_feature(df):
                        labels=["Winter","Spring","Summer","Autumn","Winter "]).str.strip()
     return df
 
-def create_day_type_feature(df):
+def create_day_type_feature(meter_df):
     # Group days of week into (later to improve to include specific bank holidays from the UK 2013 calendar)
     
     # Assign day_type feature by putting day of week value into bins
@@ -63,7 +69,7 @@ def create_day_type_feature(df):
 
     return df
 
-def create_time_slot_feature(df):
+def create_time_slot_feature(meter_df):
     # Assign season feature by putting hours in a day into time slot bins (Midnight, early morning, morning, early afternoon, late afternoon, early evening, late evening)
     # Since pd.cut only takes unique bin labels and winter months is across the end and the beginning of the year, added a space  after "Winter" and strip() afterwards
 

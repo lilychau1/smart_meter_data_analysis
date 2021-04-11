@@ -6,7 +6,7 @@ file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Configure folder locations for database and results
 raw_database_folder = os.path.abspath(os.path.join(file_path, "../data/raw"))
-# interim_database_folder = os.path.abspath(os.path.join(file_path, "../data/interim"))
+interim_database_folder = os.path.abspath(os.path.join(file_path, "../data/interim"))
 preprocessed_dataset_folder = os.path.abspath(os.path.join(file_path, "../data/preprocessed"))
 results_folder = os.path.abspath(os.path.join(file_path, "../results/"))
 
@@ -16,4 +16,9 @@ weather_data_path = raw_database_folder + "/weather_uk.csv"
 
 smart_meter_data_pickle_path = raw_database_folder + "./smdb_pickle.pkl"
 weather_pickle_path = raw_database_folder + "./weatherdb_pickle.pkl"
+train_set_pickle_path = interim_database_folder + "./train_pickle.pkl"
+test_set_pickle_path = interim_database_folder + "./test_pickle.pkl"
 preprossed_data_pickle_path = preprocessed_dataset_folder+ "./preprocessed_smdb_pickle.pkl"
+
+# Configure train-test sizes
+test_set_size = 0.2

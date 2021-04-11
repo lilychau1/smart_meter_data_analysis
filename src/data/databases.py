@@ -17,6 +17,9 @@ import config
 import sys
 import datetime
 
+import features
+import data
+
 logger = logging.getLogger(__name__)
 #set the lowest-severity log message a logger to be handle to be INFO
 logger.setLevel(logging.INFO)
@@ -24,6 +27,8 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 
 class MeterDatabase:
     def __init__(self, file, sample_size_reduction, reduce_to_proportion):
+        logger.info("loading smart meter dataset... "+ datetime.datetime.now().strftime("%H:%M:%S"))
+
         self.file = file
         pickle_file = config.smart_meter_data_pickle_path
 
@@ -103,6 +108,7 @@ class MeterDatabase:
 
 class WeatherDatabase:
     def __init__(self, file):
+        logger.info("loading weather dataset... "+ datetime.datetime.now().strftime("%H:%M:%S"))
         self.file = file
         pickle_file = config.weather_pickle_path
 
@@ -133,9 +139,37 @@ class WeatherDatabase:
         returned_df = self.df.copy()
         return returned_df
 
+class TrainTestDataset:
+    def __init__(self, df):
+        logger.info("loading smart meter train and test datasets... "+ datetime.datetime.now().strftime("%H:%M:%S"))
+
+        train_pickle_file = config.train_set_pickle_path
+        test_pickle_file = config.test_set_pickle_path
+
+        # Try to load a cached pickle version 
+        try: 
+            self.train_df = pd.read_pickle(train_pickle_file)
+            self.test_df = pd.read_pickle(train_pickle_file)            
+            logger.info(f"ℹ️ Found a pickled version of smart meter train and test datasets so loading those instead")
+        
+        except(FileNotFoundError, AttributeError):   
+            # If no pickle found, perform train test split
+            self.train_df, self.test_df = data.split_train_test_sets.stratified_train_test_split(df)
+
+            logger.info("ℹ️ Saving train and test datasets to pickle files for faster loading")
+                        
+            # Save dataset csv as pickle for faster loading in the future
+            self.train_df.to_pickle(train_pickle_file)
+            self.test_df.to_pickle(test_pickle_file)
+    
+    def get_dataframe(self):
+        returned_train_df = self.train_df.copy()
+        returned_test_df = self.test_df.copy()
+        return returned_train_df, returned_test_df
+
 class PreprocessedDataset:
-    def __init__(self, file):
-        self.file = file
+    def __init__(self, df, create_features = True, transform_data = True):
+        logger.info("loading pre-processed smart meter dataset... "+ datetime.datetime.now().strftime("%H:%M:%S"))
         pickle_file = config.preprossed_data_pickle_path
 
         # Try to load a cached pickle version 
@@ -143,9 +177,15 @@ class PreprocessedDataset:
             self.df = pd.read_pickle(pickle_file)
             logger.info("ℹ️ Found a pickled version of pre-processed smart meter database so loading that instead")
         
-        except(FileNotFoundError, AttributeError):         
-            raise FileNotFoundError
+        except(FileNotFoundError, AttributeError):   
+            if create_features:
+                # create new features if specified
+                df = features.create_features(unprocessed_df)
+            if transform_data:
+                # Perform transformation pipeline if specified
+                pass
     
     def get_dataframe(self):
         returned_df = self.df.copy()
         return returned_df
+

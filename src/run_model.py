@@ -2,7 +2,7 @@ import logging
 import sys
 import datetime
 
-from data import databases, preprocessing
+from data import databases, preprocessing, split_train_test_sets
 from features import features
 import config
 
@@ -17,21 +17,14 @@ if __name__ == "__main__":
     smart_meter_df = databases.MeterDatabase(config.smart_meter_data_path, sample_size_reduction = True, reduce_to_proportion = 0.001).get_dataframe()
     # Load weather database
     weather_df = databases.WeatherDatabase(config.weather_data_path).get_dataframe()
-    
-    try: 
-        # Try to load pickled pre-processed dataset, if any, for train-test split
-        smart_meter_df_preprocessed = databases.PreprocessedDataset(config.preprossed_data_pickle_path).get_dataframe()
 
-    except(FileNotFoundError):
-        # Add time features (e.g.: month, weekday, hour)
-        smart_meter_df_preprocessed = features.create_time_features(smart_meter_df)
+    # Load or create train and test sets
+    smart_meter_train, smart_meter_test = databases.TrainTestDataset(smart_meter_df).get_dataframe()
 
-        # Add weather features (e.g.: temperature, precipitation, snowfall)
-        smart_meter_df_preprocessed = features.create_weather_features(smart_meter_df_preprocessed, weather_df)
+    # Try to load pickled pre-processed dataset, if any
+    smart_meter_df_preprocessed = databases.PreprocessedDataset(smart_meter_df_train).get_dataframe()
 
-        # Feature extraction
-
-        # Save preprocessed database as a pickle file for analysis convenience
-        preprocessing.save_preprocessed_dataset_pickle(smart_meter_df_preprocessed)
+    # Save preprocessed database as a pickle file for analysis convenience
+    preprocessing.save_preprocessed_dataset_pickle(smart_meter_df_preprocessed)
 
     breakpoint()
