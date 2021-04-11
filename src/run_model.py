@@ -21,10 +21,11 @@ if __name__ == "__main__":
     # Load or create train and test sets
     smart_meter_train, smart_meter_test = databases.TrainTestDataset(smart_meter_df).get_dataframe()
 
-    # Try to load pickled pre-processed dataset, if any
-    smart_meter_df_preprocessed = databases.PreprocessedDataset(smart_meter_df_train).get_dataframe()
+    # Extract label "Consumption" column
+    smart_meter_train_label = smart_meter_train["Consumption"]
 
-    # Save preprocessed database as a pickle file for analysis convenience
-    preprocessing.save_preprocessed_dataset_pickle(smart_meter_df_preprocessed)
+    # Try to load npy pre-processed dataset, if any
+    smart_meter_train_preprocessed = databases.PreprocessedDataset(smart_meter_train, weather_df, "train").get_dataframe()
+
 
     breakpoint()

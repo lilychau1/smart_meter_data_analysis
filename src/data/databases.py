@@ -47,10 +47,11 @@ class MeterDatabase:
         
             logger.info("✔️ smart meter dataset loaded " + datetime.datetime.now().strftime("%H:%M:%S"))
             
-            self.reformat_dataframe()
-
             if sample_size_reduction:
                 self.reduce_sample_size(reduce_to_proportion)
+
+            self.reformat_dataframe()
+
             
             logger.info("ℹ️ Saving dataset to pickle file for faster loading")
 
@@ -60,12 +61,20 @@ class MeterDatabase:
     
     def reformat_dataframe(self):
         logger.info("Reformatting smart meter dataset... "+ datetime.datetime.now().strftime("%H:%M:%S"))
-
+       
         # Rename columns
         self.df = self.df.rename(columns = {"KWH/hh (per half hour) ": "Consumption"})
 
+        # Convert DateTime to datetime format
+        self.df["DateTime"] = pd.to_datetime(self.df["DateTime"], format = "%Y-%m-%d %H:%M:%S.%f")
+
+        # Convert Consumption to float format
+        self.df["Consumption"] = pd.to_numeric(
+            self.df["Consumption"],errors='coerce'
+            )
+
         columns_to_extract = [
-            "LCLid", "DateTime", "Consumption", "Acorn", "Acorn_grouped"
+            "LCLid", "stdorToU", "DateTime", "Consumption", "Acorn_grouped"
         ]
 
         # Extract necessary columns
@@ -79,13 +88,9 @@ class MeterDatabase:
         if len(columns_not_in_df)>0:
             logger.warning("⚠️ These columns are not in the smart meter database: {0}".format(", ".join(columns_not_in_df)))
 
-        # Convert DateTime to datetime format
-        self.df["DateTime"] = pd.to_datetime(self.df["DateTime"], format = "%Y-%m-%d %H:%M:%S.%f")
-
-        # Convert Consumption to float format
-        self.df["Consumption"] = pd.to_numeric(
-            self.df["Consumption"],errors='coerce'
-            )
+                
+        # Group data by hourly DateTime instead of half-hourly
+        self.df = data.preprocessing.reduce_resolution(self.df)
 
         logger.info("✔️ smart meter dataframe reformatted " + datetime.datetime.now().strftime("%H:%M:%S"))
 
@@ -122,7 +127,7 @@ class WeatherDatabase:
             self.df = pd.read_csv(self.file, skiprows = 2)
 
             logger.info("ℹ️ Saving dataset to pickle file for faster loading")
-                    
+
             self.reformat_dataframe()
             
             # Save dataset csv as pickle for faster loading in the future
@@ -134,6 +139,7 @@ class WeatherDatabase:
             # Convert time variable into datetime type
             self.df.time = pd.to_datetime(self.df.time, format = "%d/%m/%Y %H:%M")
             self.df = self.df.rename(columns = {"time": "DateTime"})
+
     
     def get_dataframe(self):
         returned_df = self.df.copy()
@@ -168,24 +174,29 @@ class TrainTestDataset:
         return returned_train_df, returned_test_df
 
 class PreprocessedDataset:
-    def __init__(self, df, create_features = True, transform_data = True):
+    def __init__(self, meter_df, weather_df, train_or_test = "train"):
+        # This class returns pre-processed smart meter data in np array type
+        breakpoint()
         logger.info("loading pre-processed smart meter dataset... "+ datetime.datetime.now().strftime("%H:%M:%S"))
-        pickle_file = config.preprossed_data_pickle_path
+        npy_file = config.preprossed_train_data_npy_path if train_or_test == "train" else config.preprossed_test_data_npy_path
 
         # Try to load a cached pickle version 
         try: 
-            self.df = pd.read_pickle(pickle_file)
-            logger.info("ℹ️ Found a pickled version of pre-processed smart meter database so loading that instead")
-        
+            self.smart_meter_preprocessed = np.load(npy_file)
+            logger.info(f"ℹ️ Found a npy version of pre-processed smart meter {train_or_test} data so loading that instead")
+
         except(FileNotFoundError, AttributeError):   
-            if create_features:
-                # create new features if specified
-                df = features.create_features(unprocessed_df)
-            if transform_data:
-                # Perform transformation pipeline if specified
-                pass
-    
+            # create new features if specified
+            meter_df = features.features.create_features(meter_df, weather_df)
+            # Perform transformation pipeline if specified
+            self.smart_meter_preprocessed = data.preprocessing.transform_data(meter_df)
+            
+            logger.info(f"ℹ️ Saving pre-processed smart meter {train_or_test} data to npy files for faster loading")
+                        
+            # Save dataset csv as pickle for faster loading in the future
+            np.save(npy_file, self.smart_meter_preprocessed)
+        
     def get_dataframe(self):
-        returned_df = self.df.copy()
-        return returned_df
+        returned_data = self.smart_meter_preprocessed
+        return returned_data
 

@@ -18,7 +18,9 @@ smart_meter_data_pickle_path = raw_database_folder + "./smdb_pickle.pkl"
 weather_pickle_path = raw_database_folder + "./weatherdb_pickle.pkl"
 train_set_pickle_path = interim_database_folder + "./train_pickle.pkl"
 test_set_pickle_path = interim_database_folder + "./test_pickle.pkl"
-preprossed_data_pickle_path = preprocessed_dataset_folder+ "./preprocessed_smdb_pickle.pkl"
+preprossed_train_data_npy_path = preprocessed_dataset_folder+ "./preprocessed_smdb_train_npy.npy"
+preprossed_test_data_npy_path = preprocessed_dataset_folder+ "./preprocessed_smdb_test_npy.npy"
+
 
 # Configure train-test sizes
 test_set_size = 0.2
