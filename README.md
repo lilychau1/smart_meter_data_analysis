@@ -21,7 +21,7 @@ The Renewables Ninja weather dataset contains hourly weather data within Great B
 1. **Acorn_grouped:** Grouped category of CACI Acorn group
 
 **Renewable Ninja UK weather dataset variables:**
-1. **time:**: Date and time in UTC at hourly level
+1. **time:** Date and time in UTC at hourly level
 1. **temperature:** Temperature at 2 meters above ground in degrees Celsius
 1. **precipitation:** 
 1. **irradiance_surface:** Irradiance at ground level in W/m^2 
@@ -59,13 +59,13 @@ The Renewables Ninja weather dataset contains hourly weather data within Great B
  * **config.py:** Script to specify all configurations, mostly folder and file directories for now, but will include model parameters in the next updates
  * **data:** Folder containing all data-related scripts
    * **database.py:** Script to load smart meter and weather database, with functions to reformat dataset and reduce sample size
-   * **preprocessing.py:** Script to preprocess data, including DateTime resampling and later numerical/categorical data transformation   
-   * **split_train_test_sets.py:** Perform train-test-split
+   * **preprocessing.py:** Script to preprocess data, including DateTime resampling (reduce_resolution()) and numerical/categorical data transformation (transform_data())
+   * **split_train_test_sets.py:** Perform stratified train-test-split
  * **features:** Folder containing all feature-related scripts
-   * **features.py:** create time features (month, hour and weekday) and join weather feature from the weather database (temperature, precipitation, irradiance, snowfall, snow mass, cloud cover and air density)
+   * **features.py:** create time features (season, day type and time slot) and join weather features from the weather database (temperature, precipitation, irradiance, snowfall, snow mass, cloud cover and air density)
  * **models:** Folder containing all model-related scripts
-  * **model.py:** Empty for now, but later will be updated with the analysis process in the Jupyter Notebook.
+  * **model.py:** Empty for now, but  will be updated with the analysis process in the Jupyter Notebook - feature extraction with PCA/ FA followed by model selection among regressors (tentatively linear regression, decision tree regression, random forest regression) with 10-fold cross-validation.
 * **Notebook:** Folder containing all data exploration/analysis/visualisation Jupyter Notebook files
 
 ## Data visualisation
-(to be updated)
+(to be updated - feature importance, tree plot, feature contribution to each Acorn group, plots of consumption vs indivudal features, etc. )
