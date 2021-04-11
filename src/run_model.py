@@ -14,7 +14,7 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 
 if __name__ == "__main__":
     # Load smart meter database
-    smart_meter_df = databases.MeterDatabase(config.smart_meter_data_path, sample_size_reduction = True, reduce_to_proportion = 0.33).get_dataframe()
+    smart_meter_df = databases.MeterDatabase(config.smart_meter_data_path, sample_size_reduction = True, reduce_to_proportion = 0.001).get_dataframe()
     # Load weather database
     weather_df = databases.WeatherDatabase(config.weather_data_path).get_dataframe()
     
