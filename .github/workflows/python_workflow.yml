@@ -37,4 +37,5 @@ jobs:
           
           
       - name: Run model
-        run: python ../src/run_model.py
+        run: |
+          python ../src/run_model.py
