@@ -248,7 +248,7 @@ sphinxcontrib-qthelp
 sphinxcontrib-serializinghtml
 sphinxcontrib-websupport
 spyder
-spyder-kernels @ file:///C:/ci/spyder-kernels_1614030834721/work
+spyder-kernels
 SQLAlchemy
 statsmodels==0.10.1
 sympy
