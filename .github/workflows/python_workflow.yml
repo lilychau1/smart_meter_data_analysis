@@ -25,4 +25,4 @@ jobs:
 
       - name: Run model
         run: |
-          python run_model.py
+          python ../src/run_model.py
