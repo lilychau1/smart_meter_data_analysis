@@ -1,7 +1,6 @@
 pandas
 sklearn
 numpy
-os
 backports.functools-lru-cache
 backports.os==0.1.1
 backports.shutil-get-terminal-size
