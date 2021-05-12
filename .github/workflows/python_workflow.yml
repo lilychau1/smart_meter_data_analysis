@@ -35,7 +35,7 @@ jobs:
         run: pip install -r requirements.txt
           
       - name: check directory
-        run: ls -a
+        run: ls
           
       - name: Run model
         run: |
