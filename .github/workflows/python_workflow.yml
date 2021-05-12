@@ -23,9 +23,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-      - name: Check directory
-        run: ls -a
+      - name: checkout repo content
+        uses: actions/checkout@v2
+
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7.7' # install the python version needed
           
       - name: Run model
         run: |
-          python src/run_model.py
+          python ../src/run_model.py
