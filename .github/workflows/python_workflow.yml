@@ -32,10 +32,7 @@ jobs:
           python-version: '3.7.7' # install the python version needed
       
       - name: install dependencies
-        run: | 
-        pip install pandas
-        pip install numpy
-        
+        run: pip install -r requirements.txt
           
       - name: check directory
         run: ls -a
