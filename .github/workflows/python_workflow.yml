@@ -31,6 +31,11 @@ jobs:
         with:
           python-version: '3.7.7' # install the python version needed
           
+      
+      - name: check directory
+        uses: ls -a
+          
+          
       - name: Run model
         run: |
           python ../src/run_model.py
