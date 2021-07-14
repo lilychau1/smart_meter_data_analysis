@@ -23,12 +23,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-      - name: Check directory
-        run: ls
-          
-      - name: Run model
-        run: |
-          python ../src/run_model.py
       - name: Run model
         run: |
           python ../src/run_model.py
