@@ -88,7 +88,7 @@ def create_time_slot_feature(meter_df):
 def create_weather_features(meter_df, weather_df):
 
     # Create weather features including temperature, precipitation, irradiance, snowfall, snow mass, cloud cover and air density
-    meter_df = meter_df.merge(weather_df, on = "DateTime")
+    meter_df = meter_df.merge(weather_df[["DateTime", "precipitation", "temperature", "irradiance_surface"]], on = "DateTime")
     
     logger.info("✔️ Weather features created " + datetime.datetime.now().strftime("%H:%M:%S"))
 

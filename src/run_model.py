@@ -15,6 +15,7 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 if __name__ == "__main__":
     # Load smart meter database
     smart_meter_df = databases.MeterDatabase(config.smart_meter_data_path, sample_size_reduction = True, reduce_to_proportion = 0.001).get_dataframe()
+    
     # Load weather database
     weather_df = databases.WeatherDatabase(config.weather_data_path).get_dataframe()
 
@@ -24,8 +25,9 @@ if __name__ == "__main__":
     # Extract label "Consumption" column
     smart_meter_train_label = smart_meter_train["Consumption"]
 
-    # Try to load npy pre-processed dataset, if any
+    # Try to load npy pre-processed dataset, if any. If not, compute the dataframe from smart_meter_train and weather_df
     smart_meter_train_preprocessed = databases.PreprocessedDataset(smart_meter_train, weather_df, "train").get_dataframe()
 
-
     breakpoint()
+
+
