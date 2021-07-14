@@ -24,8 +24,11 @@ jobs:
     steps:
 
       - name: Check directory
-        run: ls -a
+        run: ls
           
+      - name: Run model
+        run: |
+          python ../src/run_model.py
       - name: Run model
         run: |
           python ../src/run_model.py
