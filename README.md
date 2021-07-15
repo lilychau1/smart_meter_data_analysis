@@ -45,7 +45,7 @@ The Renewables Ninja weather dataset contains hourly weather data within Great B
 
 1. **Feature creation:** Creating new and relevant features from DateTime: Season, Time_slot and Day_type, given basic understanding of factors affecting consumptions
 
-1. **Data pre-processing:** Applying imputation on missing data, feature scaling on numerical data (Precipitation, snowfall, etc) and OneHot encoding on categorical data (e.g. Acorn_grouped, Month, weekday, hour, etc). This is currently done in Jupyter Notebook as a transformation pipeline.
+1. **Data pre-processing:** Applying imputation on missing data, feature scaling on numerical data (Precipitation, snowfall, etc) and OneHot encoding on categorical data (e.g. Acorn_grouped, Month, weekday, hour, etc).
 
 1. **Dimension reduction:** Variables such as snow fall vs snow mass, irradiance_toa vs irradiance_surface might exhibit covariance. Dimension reduction process such as PCA or factor analysis will be used to improve predictive power of model.
 
